@@ -1,0 +1,279 @@
+<!--
+
+    Copyright 2016 Green Energy Corp.
+
+    Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+    contributor license agreements. See the NOTICE file distributed with this
+    work for additional information regarding copyright ownership. Green Energy
+    Corp licenses this file to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations under
+    the License.
+
+-->
+<!DOCTYPE html>
+<html ng-app="openFMB">
+
+  <head>
+    <link data-require="bootstrap-css@3.3.6" data-semver="3.3.6" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" />
+    <link data-require="fontawesome@4.5.0" data-semver="4.5.0" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.css" />
+    <script data-require="angular.js@1.5.6" data-semver="1.5.6" src="https://code.angularjs.org/1.5.6/angular.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <div class="container" ng-controller="OpenFMBController">
+      <div class="row">
+        <div class="col-md-8">
+          <h1 style="margin-bottom: 1em;">OpenFMB 2016 Microgrid UI</h1>
+        </div>
+        <div class="col-md-4">
+          <img class="pull-right" src="images/openfmblogo.png" width="150" height="86" />
+        </div>
+      </div>
+      <!-- SUMMARIES -->
+      <div class="row">
+        <div ng-show="getReadingsError" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Error getting events and readings</div>
+        <div class="col-md-12">
+          <h2 style="margin-bottom: .75em;">Microgrid Summary</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-condensed">
+            <tbody>
+              <tr class="total-">
+                <td>Status</td>
+                <td class="value">{{ microgrid.status }}</td>
+                <td></td>
+              </tr>
+              <tr class="total-">
+                <td>Resource                   <small>(non-controllable load)</small>
+                </td>
+                <td class="value">{{ microgrid.resource | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+              <tr class="total-">
+                <td>Local Generation</td>
+                <td class="value">{{ powerTotalByType.generation | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+              <tr class="total-">
+                <td>Grid                   <small>(export neg.)</small>
+                </td>
+                <td class="value">{{ deviceTypes.reclosers[0].power | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-condensed">
+            <tbody>
+              <tr style="border-top: 3px solid #ddd;">
+                <td>Solar</td>
+                <td class="value">{{ powerTotalByType.solars | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+              <tr class="total-">
+                <td>Battery</td>
+                <td class="value">{{ powerTotalByType.batteries | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+              <tr class="total">
+                <td>Local Generation (total)</td>
+                <td class="value">{{ powerTotalByType.generation | number:1 }}</td>
+                <td class="text-muted">kW</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- end row -->
+      <!-- DEVICES -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="page-header" style="margin-top: 0.75em;">
+            <h2>Device Profiles               <small>(events & readings)</small>
+            </h2>
+          </div>
+          <div ng-show="loading" class="alert alert-info" role="alert"><i class="fa fa-info-circle" aria-hidden="true"></i> Loading device profiles...</div>
+          <div ng-show="! loading && deviceCount === 0" class="alert alert-warning" role="alert"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Warning: No device profiles found.</div>
+        </div>
+      </div>
+      <div class="row">
+        
+        <!-- RECLOSERS -->
+        <div class="col-md-6" ng-repeat="device in deviceTypes.reclosers">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 style="margin-bottom: .3em;margin-top: .3em;">Recloser: {{ device.name }} </h4>
+            </div>
+            <table class="table table-condensed">
+              <tbody>
+                <tr>
+                  <td>Is Closed</td>
+                  <td class="value">{{ device.isClosed }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Control</td>
+                  <td class="value">
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button type="button" class="btn btn-default" ng-click="controlRecloser(device, 'trip')">Trip</button>
+                      <button type="button" class="btn btn-default" ng-click="controlRecloser(device, 'close')">Close</button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <span class="text-danger pull-right" ng-show="device.controlError">{{ device.controlError }}</span>
+                  </td>
+                  <td class="text-muted"></td>
+                </tr>
+                <tr>
+                  <td>Power Flow                     <small>(export neg.)</small>
+                  </td>
+                  <td class="value">{{ device.power | number:1 }}</td>
+                  <td class="text-muted">kW</td>
+                </tr>
+                <tr>
+                  <td>Voltage</td>
+                  <td class="value">{{ device.voltage | number:1 }}</td>
+                  <td class="text-muted">V</td>
+                </tr>
+                <tr>
+                  <td>Frequency</td>
+                  <td class="value">{{ device.frequency | number:2 }}</td>
+                  <td class="text-muted">Hz</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- BATTERIES -->
+        <div class="col-md-6" ng-repeat="device in deviceTypes.batteries">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 style="margin-bottom: .3em;margin-top: .3em;">Battery: {{ device.name }} </h4>
+            </div>
+            <table class="table table-condensed">
+              <tbody>
+                <tr ng-click="editMode(device)">
+                  <td>Mode</td>
+                  <td class="value">
+                    <span class="clearfix">{{ device.mode }}</span>
+                    <select class="pull-right" ng-show="device.editingMode" name="singleSelect" id="singleSelect" ng-model="device.modeUpdate" ng-change="setBatteryMode(device)">
+                      <option value="">--- select mode ---</option>
+                      <option value="4">Maintain Minimum Battery SoC</option>
+                      <option value="12">Programmed P/Q</option>
+                      <option value="13">Islanded</option>
+                      <option value="14">Leaving Islanded</option>
+                    </select>
+                    <div class="clearfix"></div>
+                    <span class="text-danger pull-right" ng-show="device.modeError">{{ device.modeError }}</span>
+                  </td>
+                  <td></td>
+                  <td><strong><i class="fa fa-pencil-square-o edit-icon text-primary" aria-hidden="true" title="Edit mode"></i></strong></td>
+                </tr>
+                <tr ng-click="editPowerSetpoint(device)">
+                  <td>Power Setpoint</td>
+                  <td class="value text-right" style="padding-right: 0;" align="right">
+                    <span class="clearfix">{{ device.setpoint }}</span>
+                    <div class="input-group pull-right" ng-show="device.editingPowerSetpoint">
+                      <input type="text" class="form-control ng-pristine ng-valid ng-valid-pattern" ng-model="device.setpointUpdate" name="setpoint_value" ng-pattern="pattern" style="width:6em;" placeholder="decimal">
+                        <button type="button" class="btn btn-primary" ng-click="setBatteryPowerSetpoint(device)" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                            Set
+                            <span style="padding-right: 0.5em;"> </span><i ng-class="executeClasses" class="fa fa-sign-in"></i>
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <span class="text-danger pull-right" ng-show="device.powerSetpointError">{{ device.powerSetpointError }}</span>
+                  </td>
+                  <td>
+                    <span class="text-muted">kW </span>
+                  </td>
+                  <td><strong><i class="fa fa-pencil-square-o edit-icon text-primary" aria-hidden="true" title="Edit power setpoint"></i></strong></td>
+                </tr>
+                <tr>
+                  <td>SOC</td>
+                  <td class="value">{{ device.soc | number:1 }}</td>
+                  <td class="text-muted">%</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Is Charging</td>
+                  <td class="value">{{ device.isCharging }}</td>
+                  <td class="text-muted"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Power                     <small>(pos. charging)</small>
+                  </td>
+                  <td class="value">{{ device.power | number:1 }}</td>
+                  <td class="text-muted">kW</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Voltage</td>
+                  <td class="value">{{ device.voltage | number:1 }}</td>
+                  <td class="text-muted">V</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Frequency</td>
+                  <td class="value">{{ device.frequency | number:2 }}</td>
+                  <td class="text-muted">Hz</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- SOLARS -->
+        <div class="col-md-6" ng-repeat="device in deviceTypes.solars">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 style="margin-bottom: .3em;margin-top: .3em;">Solar: {{ device.name }} </h4>
+            </div>
+            <table class="table table-condensed">
+              <tbody>
+                <tr>
+                  <td>Power</td>
+                  <td class="value">{{ device.power | number:1 }}</td>
+                  <td class="text-muted">kW</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- RESOURCES -->
+        <div class="col-md-6" ng-repeat="device in deviceTypes.resources">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 style="margin-bottom: .3em;margin-top: .3em;">Resource: {{ device.name }} </h4>
+            </div>
+            <table class="table table-condensed">
+              <tbody>
+                <tr>
+                  <td>Power</td>
+                  <td class="value">{{ device.power | number:1 }}</td>
+                  <td class="text-muted">kW</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- end row -->
+    </div>
+    <!-- end container -->
+  </body>
+
+</html>

@@ -1,0 +1,81 @@
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----43F1A70583F93AB174C2507702FA4BCC"
+
+This is an S/MIME signed message
+
+------43F1A70583F93AB174C2507702FA4BCC
+Content-Type: text/plain
+
+<?xml version="1.0" encoding="UTF-8"?>
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../schema/dds_security_governance.xsd">
+    <domain_access_rules>
+        <domain_rule>
+            <domains>
+                <id_range>
+                    <min>0</min>
+                </id_range>
+            </domains>
+            <allow_unauthenticated_participants>false</allow_unauthenticated_participants>
+            <enable_join_access_control>true</enable_join_access_control>
+            <discovery_protection_kind>ENCRYPT</discovery_protection_kind>
+            <liveliness_protection_kind>ENCRYPT</liveliness_protection_kind>
+            <rtps_protection_kind>SIGN</rtps_protection_kind>
+            <topic_access_rules>
+                <topic_rule>
+                    <topic_expression>*</topic_expression>
+                    <enable_discovery_protection>true</enable_discovery_protection>
+                    <enable_read_access_control>true</enable_read_access_control>
+                    <enable_write_access_control>true</enable_write_access_control>
+                    <metadata_protection_kind>ENCRYPT</metadata_protection_kind>
+                    <data_protection_kind>ENCRYPT</data_protection_kind>
+                </topic_rule>
+            </topic_access_rules>
+        </domain_rule>
+    </domain_access_rules>
+</dds>
+
+
+------43F1A70583F93AB174C2507702FA4BCC
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIIGXwYJKoZIhvcNAQcCoIIGUDCCBkwCAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggOCMIIDfjCCAmYCCQC3rhnDTVcy9TANBgkqhkiG9w0BAQsFADCB
+gDELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRQwEgYDVQQHDAtTYW50YSBDbGFy
+YTEeMBwGA1UECgwVUmVhbCBUaW1lIElubm92YXRpb25zMQ8wDQYDVQQDDAZSVEkg
+Q0ExHTAbBgkqhkiG9w0BCQEWDnNlY3VyZUBydGkuY29tMB4XDTE4MDYyMTIxMjgz
+M1oXDTI4MDYxODIxMjgzM1owgYAxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEU
+MBIGA1UEBwwLU2FudGEgQ2xhcmExHjAcBgNVBAoMFVJlYWwgVGltZSBJbm5vdmF0
+aW9uczEPMA0GA1UEAwwGUlRJIENBMR0wGwYJKoZIhvcNAQkBFg5zZWN1cmVAcnRp
+LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAO2Ux29WTwIRcGA5
+I7gx+/ZyCA4dmlJPIOMaaWSGL5TQGHo5XhNQZHd1bytt5+EKClAtSbIj2DwcKYOS
+eeDQ7jNF5UTF+a+JSiQtOsf9bhF+47FdYhWrLBoX7txbHRA3rBoiqDb6ItYEWGix
+aK2U5kYw4lLwOUIHd23R2LVWVBBqWyYk5PA4Y17RNoCSAzCBA7yz8CO0F9I2Z7fq
+VODfRE4CjoRQ8kuIWAYxRED7hDbwJ7Aey17nf9QS/8cW3DAClUHYzJCXA8gavW2G
+jtnrBNl6YT7VixuzbiF3nfRHiI45g8EcektZAAvPtQUMqIOkaKTuvEBzqdb5Rr0h
+lTenYXUCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAN1JMumDgKl2T+kKP6OnrVgQz
+Egf2xVzrRgysh1pOBYUlN7dutWV5iXWQrQk6QUMM2SmFSttXI0ih1FuQ3G6JeifU
+ty2W0tUIRQsmot6AWFvyeVyAiFpOFk4CU4umpCfKX5sd77Wn8n5w1HM69HQjLAPr
+mNDQ/4ZqkEApetrcDc18SNATozdLcqfVo7h/5kWTl91LYEHOVqAc3QKuurXkWjNy
+QN6a04MgI8ldxEMklPi4/z3HkxVSj/961L9PXwoZZBXIuRaODYlzRZIVSRSTVgWa
+1zXJd1kBaFgJgIlW4keDXMkaunixisHeKiAOt4V6jDm1/AIPocINtJr7+jv6VTGC
+AqEwggKdAgEBMIGOMIGAMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFDASBgNV
+BAcMC1NhbnRhIENsYXJhMR4wHAYDVQQKDBVSZWFsIFRpbWUgSW5ub3ZhdGlvbnMx
+DzANBgNVBAMMBlJUSSBDQTEdMBsGCSqGSIb3DQEJARYOc2VjdXJlQHJ0aS5jb20C
+CQC3rhnDTVcy9TANBglghkgBZQMEAgEFAKCB5DAYBgkqhkiG9w0BCQMxCwYJKoZI
+hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODA2MjEyMTQ5MjVaMC8GCSqGSIb3DQEJ
+BDEiBCCO6qHcynotO9OD+JjeDRWEdv1CDoF+JdbhFhVT/kUQATB5BgkqhkiG9w0B
+CQ8xbDBqMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJYIZIAWUDBAECMAoG
+CCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMC
+BzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQAGDTHJZeSiTR0sQBHd
+m7wiAXEtS93+BWuoNS7SbmsQ3QiwzO8bbQzYQz8ebAW9wlle1TCtdN3OtkrxDFr/
+S5NchVzY22SnzhDIZcKPHWVcHtiOt8miKrDHckMTALRRXdvXXRY7UX49RtP4jusB
+jHQ9OA8oreW5w4YdywiCvG2+g3G6MhYei1xFcPgBFyPCBCk+6YCil9IWZupXx1I4
+ejlmTdIXyMrYfduf35EcAuHEPoZaQ08W8HIUVTPhoeT8BYsHJKDwTyqQbDD59+7p
+WqT2U+WF8/53C/mlYMqRkKE6hY1D0AVDYKHKqf0fdbs/SGWySkjMVH4d2buEH1eW
+izpD
+
+------43F1A70583F93AB174C2507702FA4BCC--
+

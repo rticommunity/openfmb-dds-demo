@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>openfmb-hmi</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.greenenergycorp.openfmb</groupId>
+        <artifactId>openfmb-hmi-parent</artifactId>
+        <version>0.0.5-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>../APACHE_FILE_HEADER</header>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName> <!-- Any name that makes sense -->
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.greenenergycorp.openfmb.hmi.HmiEntry</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-experimental_2.11</artifactId>
+            <version>2.4.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.greenenergycorp.openfmb</groupId>
+            <artifactId>openfmb-simulators</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
+        <!-- dependency>
+            <groupId>com.greenenergycorp.openfmb</groupId>
+            <artifactId>openfmb-xml-bindings</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency-->
+        <!-- dependency>
+            <groupId>com.greenenergycorp.openfmb</groupId>
+            <artifactId>openfmb-mapping-library</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency-->
+        <!-- dependency>
+            <groupId>com.greenenergycorp.openfmb</groupId>
+            <artifactId>openfmb-adapter-xml-data</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency-->
+        <!-- dependency>
+            <groupId>com.greenenergycorp.openfmb</groupId>
+            <artifactId>openfmb-mqtt-adapter</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.7</version>
+        </dependency>
+    </dependencies>
+
+</project>

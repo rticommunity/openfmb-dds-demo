@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<!-- 
+Description
+XML QoS Profile for Automotive Example
+
+The QoS configuration of the DDS entities in the generated example is loaded 
+from this file.
+
+This file is used only when it is in the current working directory or when the
+environment variable NDDS_QOS_PROFILES is defined and points to this file.
+
+The profile in this file inherits from the builtin QoS profile 
+BuiltinQosLib::Generic.StrictReliable. That profile, along with all of the 
+other built-in QoS profiles can be found in the 
+BuiltinProfiles.documentationONLY.xml file located in the 
+$NDDSHOME/resource/xml/ directory.
+
+You may use any of these QoS configurations in your application simply by 
+referring to them by the name shown in the 
+BuiltinProfiles.documentationONLY.xml file and listed below: 
+
+* In library "BuiltinQosLib":
+** Baseline
+** Baseline.5.0.0
+** Baseline.5.1.0
+** Baseline.5.2.0
+** Generic.Common
+** Generic.510TransportCompatibility
+** Generic.Monitoring.Common
+** Generic.ConnextMicroCompatibility
+** Generic.OtherDDSVendorCompatibility
+
+* In library "BuiltinQosLibExp":
+** Generic.StrictReliable
+** Generic.KeepLastReliable
+** Generic.BestEffort
+** Generic.StrictReliable.HighThroughput
+** Generic.StrictReliable.LowLatency
+** Generic.Participant.LargeData
+** Generic.Participant.LargeData.Monitoring
+** Generic.StrictReliable.LargeData
+** Generic.KeepLastReliable.LargeData
+** Generic.StrictReliable.LargeData.FastFlow
+** Generic.StrictReliable.LargeData.MediumFlow
+** Generic.StrictReliable.LargeData.SlowFlow
+** Generic.KeepLastReliable.LargeData.FastFlow
+** Generic.KeepLastReliable.LargeData.MediumFlow
+** Generic.KeepLastReliable.LargeData.SlowFlow
+** Generic.KeepLastReliable.TransientLocal
+** Generic.KeepLastReliable.Transient
+** Generic.KeepLastReliable.Persistent
+** Generic.AutoTuning
+** Pattern.PeriodicData
+** Pattern.Streaming
+** Pattern.ReliableStreaming
+** Pattern.Event
+** Pattern.AlarmEvent
+** Pattern.Status
+** Pattern.AlarmStatus
+** Pattern.LastValueCache
+
+You should not edit the file BuiltinProfiles.documentationONLY.xml directly.
+However, if you wish to modify any of the values in a built-in profile, the
+recommendation is to create a profile of your own and inherit from the built-in
+profile you wish to modify. The NDDS_QOS_PROFILES.example.xml file (contained in 
+the same directory as the BuiltinProfiles.documentationONLY.xml file) shows how
+to inherit from the built-in profiles. 
+
+For more information about XML QoS Profiles see Chapter 17 in the 
+RTI Connext user manual.
+-->
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/5.2.7/rti_dds_qos_profiles.xsd"
+     version="5.2.7">
+  <!-- QoS Library containing the QoS profile used in the generated example.
+
+       A QoS library is a named set of QoS profiles.
+   -->
+  <qos_library name="openFMB_Demo_Library">
+
+     <!-- QoS profile used to configure reliable communication between the DataWriter 
+          and DataReader created in the example code.
+
+          A QoS profile groups a set of related QoS.
+      -->
+
+    <qos_profile name="SecureBestEffort" base_name="BuiltinQosLibExp::Generic.BestEffort">
+      <participant_qos>
+        <transport_builtin>
+          <mask>UDPv4</mask>
+        </transport_builtin>
+        <discovery>
+          <initial_peers>
+            <element>builtin.udpv4://239.255.0.1</element>
+            <element>builtin.udpv4://127.0.0.1</element>
+          </initial_peers>
+        </discovery>
+      </participant_qos>
+    </qos_profile>
+
+    <qos_profile name="SecureReliable" base_name="SecureBestEffort">
+      <datareader_qos>
+        <reliability>
+          <kind>RELIABLE_RELIABILITY_QOS</kind>
+        </reliability>
+        <history>
+          <depth>1</depth>
+          <kind>KEEP_LAST_HISTORY_QOS</kind>
+        </history>
+      </datareader_qos>
+      <datawriter_qos>
+        <reliability>
+          <kind>RELIABLE_RELIABILITY_QOS</kind>
+        </reliability>
+      </datawriter_qos>      
+    </qos_profile>
+    
+    <qos_profile name="Solar_Profile_Reading" base_name="SecureBestEffort" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Solar Reading Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Solar Reading Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Solar Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+    
+    <qos_profile name="Solar_Profile_Event" base_name="SecureReliable" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Solar Event Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Solar Event Reader</name>
+        </subscription_name>
+      </datareader_qos>      
+      <participant_qos>
+        <participant_name>
+          <name>Solar Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>    
+
+    <qos_profile name="Recloser_Profile_Reading" base_name="SecureBestEffort" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Recloser Reading Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Recloser Reading Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Recloser Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+    
+    <qos_profile name="Recloser_Profile_Event" base_name="SecureReliable" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Recloser Event Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Recloser Event Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Recloser Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>    
+
+    <qos_profile name="Recloser_Profile_Control" base_name="SecureReliable" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Recloser Control Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Recloser Control Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Recloser Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>        
+      
+      
+    <qos_profile name="Battery_Profile_Reading" base_name="SecureBestEffort" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Battery Reading Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Batteryr Reading Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Battery Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+  
+    <qos_profile name="Battery_Profile_Event" base_name="SecureReliable" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Battery Event Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Battery Event Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Battery Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>    
+    
+    <qos_profile name="Battery_Profile_Control" base_name="SecureReliable" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Battery Control Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Batteryr Control Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Battery Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>        
+      
+      
+    <qos_profile name="Balancer_Battery_Profile_Control" base_name="Battery_Profile_Control" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <participant_qos>
+        <participant_name>
+          <name>Balancer Simulator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+
+    <qos_profile name="Load_Profile" base_name="SecureBestEffort" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <datawriter_qos>
+        <publication_name>
+          <name>Load Data Writer</name>
+        </publication_name>
+      </datawriter_qos>
+      <datareader_qos>
+        <subscription_name>
+          <name>Load Data Reader</name>
+        </subscription_name>
+      </datareader_qos>
+      <participant_qos>
+        <participant_name>
+          <name>Load Generator</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+
+    <qos_profile name="HMI_Recloser_Profile_Control" base_name="Recloser_Profile_Control" is_default_qos="false">
+      <!-- QoS used to configure the data writer created in the example code -->                
+      <participant_qos>
+        <participant_name>
+          <name>HMI</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>  
+
+  </qos_library>
+</dds>
