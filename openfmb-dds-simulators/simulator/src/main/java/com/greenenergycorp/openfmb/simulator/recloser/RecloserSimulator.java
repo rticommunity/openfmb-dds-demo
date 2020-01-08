@@ -42,13 +42,9 @@ import openfmb.rti.subscriber.solarmodule.SolarReadingProfileSubscriber;
 
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class RecloserSimulator {
 
-    private final static Logger logger = LoggerFactory.getLogger(RecloserSimulator.class);
 
     public static void main(final String[] args) throws Exception {
     	

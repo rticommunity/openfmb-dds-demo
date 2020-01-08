@@ -49,14 +49,10 @@ import OpenFMB_Information_Model.openfmb.solarmodule.SolarEventProfile;
 import openfmb.rti.publisher.essmodule.ESSEventProfilePublisher;
 import openfmb.rti.publisher.essmodule.ESSReadingProfilePublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Calendar;
 import java.util.Random;
 
 public class BatteryMachine {
-    private final static Logger logger = LoggerFactory.getLogger(BatteryMachine.class);
 
     private  ESSEventProfilePublisher eventPublisher;
     private  ESSReadingProfilePublisher readPublisher;
@@ -112,7 +108,6 @@ public class BatteryMachine {
     }
 
     public void setPowerSetpoint(final double v) {
-        logger.debug("Set power: " + v);
         final double clamped = clampSetpointValue(v);
 
         synchronized (mutex) {
@@ -127,13 +122,12 @@ public class BatteryMachine {
     }
 
     public void setModeControl(final BatteryMode nextMode) {
-        logger.debug("Set mode: " + nextMode);
         synchronized (mutex) {
             if (mode == BatteryMode.MAINTAIN_STANDBY) {
                 if (nextMode == BatteryMode.PROGRAM_PQ || nextMode == BatteryMode.ISLANDED) {
                     transitionToSetpointDrivenMode(nextMode);
                 } else {
-                    logger.warn("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
+                    System.out.println("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
                 }
             } else if (mode == BatteryMode.PROGRAM_PQ) {
                 if (nextMode == BatteryMode.MAINTAIN_STANDBY) {
@@ -141,13 +135,13 @@ public class BatteryMachine {
                 } else if (nextMode == BatteryMode.ISLANDED) {
                     transitionToSetpointDrivenMode(nextMode);
                 } else {
-                    logger.warn("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
+                    System.out.println("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
                 }
             } else if (mode == BatteryMode.ISLANDED) {
                 if (nextMode == BatteryMode.LEAVING_ISLANDED) {
                     transitionToMaintainStandbyMode();
                 } else {
-                    logger.warn("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
+                    System.out.println("Transition from state " + mode.getDescription() + " to " + nextMode.getDescription() + " not supported.");
                 }
             }
         }
@@ -293,7 +287,7 @@ public class BatteryMachine {
         	
         	
         } catch (Exception ex) {
-            logger.error("Failure to update state: " + ex);
+            System.out.println("Failure to update state: " + ex);
         }
     }
 

@@ -26,18 +26,11 @@
 
 package com.greenenergycorp.openfmb.simulator.recloser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class RecloserMachine implements SystemPowerObserver {
-
-    private final static Logger logger = LoggerFactory.getLogger(RecloserMachine.class);
-
-    
 
     private final double voltage;
     private final double frequency;
@@ -131,7 +124,7 @@ public class RecloserMachine implements SystemPowerObserver {
                 publisher.recloserEventUpdate(isClosed, false);
             }
         } catch (Exception ex) {
-            logger.warn("Could not publish recloser update: " + ex);
+            System.out.println("Could not publish recloser update: " + ex);
         }
     }
 }

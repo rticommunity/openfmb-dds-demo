@@ -32,11 +32,6 @@ import com.greenenergycorp.openfmb.simulator.DeviceId;
 import com.greenenergycorp.openfmb.simulator.LineValueDataLoader;
 import com.greenenergycorp.openfmb.simulator.PropertyUtil;
 
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Random;
@@ -62,7 +57,6 @@ public class SolarSimulator {
     static String name = null;
     static String description = null;
 
-    private final static Logger logger = LoggerFactory.getLogger(SolarSimulator.class);
 
     public static void main(String[] args) throws Exception {
 
@@ -181,7 +175,7 @@ public class SolarSimulator {
         		eventPublisher.publish(event);
         		
             } catch (Exception ex) {
-                logger.error("Error publishing data: " + ex);
+                System.out.println("Error publishing data: " + ex);
             }
             Thread.sleep(intervalMs);
         }

@@ -26,15 +26,10 @@
 
 package com.greenenergycorp.openfmb.simulator.balance;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class BalancingMachine  {
-    private final static Logger logger = LoggerFactory.getLogger(BalancingMachine.class);
 
     private final String sourceLogicalDeviceId;
     private final BatteryControlPublisher publisher;
@@ -56,20 +51,18 @@ public class BalancingMachine  {
             if (isClosed && !nextIsClosed) {
                 isClosed = false;
                 try {
-                    logger.info("Detected islanding...");
 
                     publisher.setPowerSetpoint(totalPower());
                     publisher.setIslanded();
                 } catch (Throwable ex) {
-                    logger.error("Could not respond to islanding: " + ex);
+                    System.out.println("Could not respond to islanding: " + ex);
                 }
             } else if (!isClosed && nextIsClosed) {
                 isClosed = true;
                 try {
-                    logger.info("Detected closing...");
                     publisher.leaveIslanded();
                 } catch (Throwable ex) {
-                    logger.error("Could not respond to de-islanding: " + ex);
+                    System.out.println("Could not respond to de-islanding: " + ex);
                 }
             }
         }
@@ -120,7 +113,7 @@ public class BalancingMachine  {
                 publisher.setPowerSetpoint(-1 * power);
             }
         } catch (Exception ex) {
-            logger.warn("Could not publish update: " + ex);
+            System.out.println("Could not publish update: " + ex);
         }
     }
 }

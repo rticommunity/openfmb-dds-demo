@@ -32,12 +32,8 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import OpenFMB_Information_Model.openfmb.commonmodule.DateTimeInterval;
 import OpenFMB_Information_Model.openfmb.commonmodule.HexBinary16;
@@ -92,7 +88,6 @@ public class LoadPublisher {
     static String qosLibrary = null;
     static String qosProfile = null;
     
-    private static Logger logger = null;
 
 	//@Override
 	public static ResourceReadingProfile retrieveResourceReadingProfile() {
@@ -160,20 +155,15 @@ public class LoadPublisher {
 	public static void main(String[] args) {
 		// Create an instance of LoadPublisher and run it
 		
-		logger = LoggerFactory.getLogger(LoadPublisher.class.getSimpleName());
 		
-		// Load the properties for the log4j loggers. 
-	    PropertyConfigurator.configure(LoadPublisher.class.getSimpleName() + ".log4j.properties");
-	    
-
         final String simConfigPath = System.getProperty("config.sim.path", "loadsim.properties");
        final Properties prop = new Properties(System.getProperties());
         try {
 			prop.load(new FileInputStream(simConfigPath));
 		} catch (FileNotFoundException e1) {
-			logger.info("Properties file not found");
+			System.out.println("Properties file not found");
 		} catch (IOException e1) {
-			logger.info("Properties file I/O exception ");
+			System.out.println("Properties file I/O exception ");
 			e1.printStackTrace();
 		}
  
@@ -184,13 +174,13 @@ public class LoadPublisher {
 				PublishRate = Integer.parseInt(prop.getProperty("PublishRate"));
 				if (PublishRate < 0)
 				{
-					logger.info("PublishRate must be greater than 0 seconds. Defaulting to " + DEFAULT_PUBLISH_RATE + " seconds...");
+					System.out.println("PublishRate must be greater than 0 seconds. Defaulting to " + DEFAULT_PUBLISH_RATE + " seconds...");
 					PublishRate = DEFAULT_PUBLISH_RATE;
 				}
 			}
 			catch (NumberFormatException e)
 			{
-				logger.info("PublishRate is not a valid integer value. Defaulting to " + DEFAULT_PUBLISH_RATE + " seconds...");
+				System.out.println("PublishRate is not a valid integer value. Defaulting to " + DEFAULT_PUBLISH_RATE + " seconds...");
 				PublishRate = DEFAULT_PUBLISH_RATE;
 			}
 			try
@@ -198,37 +188,37 @@ public class LoadPublisher {
 				domainId = Integer.parseInt(prop.getProperty("DomainId"));
 				if (domainId < 0)
 				{
-					logger.info("Domain Id must be greater than 0 seconds. Defaulting to " + DEFAULT_DOMAIN_ID);
+					System.out.println("Domain Id must be greater than 0. Defaulting to " + DEFAULT_DOMAIN_ID);
 					domainId = DEFAULT_DOMAIN_ID;
 				}
 			}
 			catch (NumberFormatException e)
 			{
-				logger.info("DomainId is not a valid integer value. Defaulting to " + DEFAULT_DOMAIN_ID);
+				System.out.println("DomainId is not a valid integer value. Defaulting to " + DEFAULT_DOMAIN_ID);
 				domainId = DEFAULT_DOMAIN_ID;
 			}
 			topicName = prop.getProperty("Topic");
 			if (topicName == null)
 			{
-				logger.info("Topic name not found. Defaulting to " + DEFAULT_TOPIC);
+				System.out.println("Topic name not found. Defaulting to " + DEFAULT_TOPIC);
 				topicName = DEFAULT_TOPIC;
 			}
 			qosLibrary = prop.getProperty("Qos.Library");
 			if (qosLibrary == null)
 			{
-				logger.info("QoS Library name not found. Defaulting to BuiltinQosLib");
+				System.out.println("QoS Library name not found. Defaulting to BuiltinQosLib");
 				qosLibrary = "BuiltinQosLib";
 			}
 			qosProfile = prop.getProperty("Qos.Profile");
 			if (qosProfile == null)
 			{
-				logger.info("QoS profile name not found. Defaulting to Generic.Common");
+				System.out.println("QoS profile name not found. Defaulting to Generic.Common");
 				qosProfile = "Generic.Common";
 			}
 		}
 		catch (Exception e)
 		{
-			logger.error(e.toString());
+			System.out.println(e.toString());
 			return;
 		}
 		ResourceReadingProfilePublisher loadPublisher = new ResourceReadingProfilePublisher();
@@ -243,19 +233,11 @@ public class LoadPublisher {
 			
 			if (instance == null)
 			{
-				logger.info("Could not retrieve ResourceReadingProfile data. Skipping...");
+				System.out.println("Could not retrieve ResourceReadingProfile data. Skipping...");
 			}
 			else
 			{
 				// Publish the message
-
-
-				
-				logger.debug("Writing ResourceReadingProfile");
-
-                /* Modify the instance to be written here */
-
-                /* Write data */
 				loadPublisher.publish(instance);
                 
               
@@ -263,12 +245,11 @@ public class LoadPublisher {
 			// Sleep for mqttPublishRate seconds and try to reconnect
 			try
 			{
-				logger.debug("Sleeping for " + PublishRate + " seconds before publishing next value...");
 				Thread.sleep(PublishRate * 1000);
 			}
 			catch (Exception e)
 			{
-				logger.error("Sleep interrupted while waiting to publish next value. Shutting down...", e);
+				System.out.println("Sleep interrupted while waiting to publish next value. Shutting down..." + e);
 				shutDown = true;
 				return;
 			}

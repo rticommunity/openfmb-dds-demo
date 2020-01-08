@@ -33,15 +33,11 @@ import com.greenenergycorp.openfmb.simulator.PropertyUtil;
 
 import openfmb.rti.publisher.essmodule.ESSControlProfilePublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import java.util.Properties;
 
 public class IslandBalancer {
 
-    private final static Logger logger = LoggerFactory.getLogger(IslandBalancer.class);
 
     public static void main(final String[] args) throws Exception {
 

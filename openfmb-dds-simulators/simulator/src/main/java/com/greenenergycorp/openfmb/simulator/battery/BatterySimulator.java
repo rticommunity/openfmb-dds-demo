@@ -34,9 +34,6 @@ import openfmb.rti.publisher.solarmodule.SolarEventProfilePublisher;
 import openfmb.rti.publisher.solarmodule.SolarReadingProfilePublisher;
 import openfmb.rti.subscriber.essmodule.ESSControlProfileSubscriber;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.greenenergycorp.openfmb.simulator.DeviceId;
 import com.greenenergycorp.openfmb.simulator.PropertyUtil;
 
@@ -45,8 +42,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class BatterySimulator {
-
-    private final static Logger logger = LoggerFactory.getLogger(BatterySimulator.class);
 
     public static void main(String[] args) throws Exception {
 

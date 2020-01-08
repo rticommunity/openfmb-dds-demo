@@ -49,12 +49,8 @@ import openfmb.rti.publisher.reclosermodule.RecloserControlProfilePublisher;
 import java.util.Calendar;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ControlIssuer {
 
-    private final static Logger logger = LoggerFactory.getLogger(ControlIssuer.class);
 
     private final DeviceId recloserId;
     private final DeviceId batteryId;
@@ -101,7 +97,7 @@ public class ControlIssuer {
             recloserPublisher.publish(data);
         	
         } catch (Throwable ex) {
-            logger.warn("Error issuing control: " + ex);
+            System.out.println("Error issuing control: " + ex);
         }
     }
 
@@ -141,7 +137,7 @@ public class ControlIssuer {
     		batteryPublisher.publish(instance);
             
         } catch (Throwable ex) {
-            logger.warn("Error issuing control: " + ex);
+            System.out.println("Error issuing control: " + ex);
         }
     }
 
@@ -177,7 +173,7 @@ public class ControlIssuer {
     		batteryPublisher.publish(instance);        	
         } catch (Throwable ex) {
         	
-            logger.warn("Error issuing control: " + ex);
+            System.out.println("Error issuing control: " + ex);
         }
     }
 
